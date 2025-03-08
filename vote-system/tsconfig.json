@@ -33,8 +33,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/app/student/student.js",
-    "src/app/student/page.js"
+    "src/app/student/student.tsx",
+    "src/app/student/page.js",
+    "src/app/color/color.jsx",
+    "src/app/color/color.js"
   ],
   "exclude": [
     "node_modules"
