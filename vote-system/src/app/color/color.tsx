@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { User, Clock, Award, ArrowLeft, Check, X } from "lucide-react";
+import { User, Clock, Award, ArrowLeft, Check, X, Home } from "lucide-react";
 
 const colorGroups = ["ฟ้า", "เขียว", "แดง", "เหลือง", "ม่วง"]; // รายชื่อคณะสี
 
@@ -42,17 +42,18 @@ export default function VoteColor() {
   useEffect(() => {
     const name = localStorage.getItem("studentName");
     const vote = localStorage.getItem("voteColor");
+    const candidate = localStorage.getItem("voteColorCandidate");
 
     if (!name) {
       router.push("/login");
     } else {
       setStudentName(name);
       if (vote) {
-        setVoted(true);
         setSelectedColor(vote);
-        const candidate = localStorage.getItem("voteColorCandidate");
+
         if (candidate) {
           setSelectedCandidate(candidate);
+          setVoted(true);
         }
       }
       setIsLoading(false);
@@ -71,27 +72,30 @@ export default function VoteColor() {
     return () => clearInterval(timer); // Cleanup the timer when the component unmounts
   }, [router]);
 
-  const handleVote = (color: string, candidate?: string) => {
+  const handleSelectColor = (color: string) => {
+    setSelectedColor(color);
+  };
+
+  const handleVote = (color: string, candidate: string) => {
     if (!voted) {
       localStorage.setItem("voteColor", color);
+      localStorage.setItem("voteColorCandidate", candidate);
+      setSelectedCandidate(candidate);
       setVoted(true);
-      setSelectedColor(color);
 
-      if (candidate) {
-        localStorage.setItem("voteColorCandidate", candidate);
-        setSelectedCandidate(candidate);
-        setVotes((prevVotes: Votes) => ({
-          ...prevVotes,
-          [candidate]: (prevVotes[candidate] || 0) + 1,
-        }));
-      }
+      setVotes((prevVotes: Votes) => ({
+        ...prevVotes,
+        [candidate]: (prevVotes[candidate] || 0) + 1,
+      }));
     }
   };
 
   const handleBack = () => {
-    if (!voted) {
-      setSelectedColor("");
-    }
+    setSelectedColor("");
+  };
+
+  const handleGoHome = () => {
+    router.push("/");
   };
 
   const getWinner = () => {
@@ -183,11 +187,8 @@ export default function VoteColor() {
                   key={color}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => handleVote(color)}
-                  disabled={voted}
-                  className={`flex flex-col items-center justify-center p-6 rounded-xl shadow-sm border-2 border-transparent hover:border-gray-300 transition-all ${
-                    voted ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                  onClick={() => handleSelectColor(color)}
+                  className="flex flex-col items-center justify-center p-6 rounded-xl shadow-sm border-2 border-transparent hover:border-gray-300 transition-all"
                 >
                   <div
                     className={`w-16 h-16 rounded-full ${colorMapping[color]} mb-3 flex items-center justify-center`}
@@ -214,70 +215,83 @@ export default function VoteColor() {
                   className="flex items-center text-gray-600 hover:text-green-600 transition-colors mb-4"
                 >
                   <ArrowLeft className="h-4 w-4 mr-1" />
-                  <span>กลับไปเลือกคณะสี</span>
+                  <span>ย้อนกลับมาเลือกสีใหม่</span>
                 </button>
               )}
 
               <div className="flex items-center justify-center mb-4">
-                <div
-                  className={`w-20 h-20 rounded-full ${colorMapping[selectedColor]} flex items-center justify-center`}
-                >
-                  <span className="text-white font-bold text-xl">
-                    {selectedColor}
-                  </span>
-                </div>
+                {voted ? (
+                  <div className="text-center">
+                    <div
+                      className={`w-20 h-20 rounded-full ${colorMapping[selectedColor]} mx-auto flex items-center justify-center mb-2`}
+                    >
+                      <span className="text-white font-bold text-xl">
+                        {selectedCandidate === "ไม่ประสงค์ลงคะแนน"
+                          ? "X"
+                          : selectedCandidate}
+                      </span>
+                    </div>
+                    <p className="font-medium text-gray-800">
+                      {selectedCandidate === "ไม่ประสงค์ลงคะแนน"
+                        ? "ไม่ประสงค์ลงคะแนน"
+                        : `คุณได้เลือก ${selectedCandidate} จากคณะสี${selectedColor}`}
+                    </p>
+
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={handleGoHome}
+                      className="mt-6 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow-md mx-auto transition-colors"
+                    >
+                      <Home className="h-5 w-5" />
+                      <span>กลับไปหน้าแรก</span>
+                    </motion.button>
+                  </div>
+                ) : (
+                  <div
+                    className={`w-20 h-20 rounded-full ${colorMapping[selectedColor]} flex items-center justify-center`}
+                  >
+                    <span className="text-white font-bold text-xl">
+                      {selectedColor}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {candidates[selectedColor].map((name) => (
+              {!voted && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {candidates[selectedColor].map((name) => (
+                    <motion.button
+                      key={name}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleVote(selectedColor, name)}
+                      className="relative p-6 rounded-xl border-2 bg-white border-gray-200 hover:border-green-300 transition-all"
+                    >
+                      <div className="text-center">
+                        <div className="font-bold text-xl mb-1">{name}</div>
+                        <div className="text-sm">
+                          ผู้สมัครคณะสี{selectedColor}
+                        </div>
+                      </div>
+                    </motion.button>
+                  ))}
+
                   <motion.button
-                    key={name}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => handleVote(selectedColor, name)}
-                    disabled={voted}
-                    className={`relative p-6 rounded-xl border-2 ${
-                      voted && selectedCandidate === name
-                        ? `${colorMapping[selectedColor]} border-transparent text-white`
-                        : "bg-white border-gray-200 hover:border-green-300"
-                    } transition-all`}
+                    onClick={() =>
+                      handleVote(selectedColor, "ไม่ประสงค์ลงคะแนน")
+                    }
+                    className="relative p-6 rounded-xl border-2 bg-white border-gray-200 hover:border-red-300 transition-all"
                   >
-                    {voted && selectedCandidate === name && (
-                      <div className="absolute top-2 right-2">
-                        <Check className="h-5 w-5 text-white" />
-                      </div>
-                    )}
                     <div className="text-center">
-                      <div className="font-bold text-xl mb-1">{name}</div>
-                      <div className="text-sm">
-                        ผู้สมัครคณะสี{selectedColor}
-                      </div>
+                      <X className="h-8 w-8 mx-auto mb-1" />
+                      <div className="text-sm">ไม่ประสงค์ลงคะแนน</div>
                     </div>
                   </motion.button>
-                ))}
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handleVote(selectedColor, "ไม่ประสงค์ลงคะแนน")}
-                  disabled={voted}
-                  className={`relative p-6 rounded-xl border-2 ${
-                    voted && selectedCandidate === "ไม่ประสงค์ลงคะแนน"
-                      ? "bg-gray-700 border-transparent text-white"
-                      : "bg-white border-gray-200 hover:border-red-300"
-                  } transition-all`}
-                >
-                  {voted && selectedCandidate === "ไม่ประสงค์ลงคะแนน" && (
-                    <div className="absolute top-2 right-2">
-                      <Check className="h-5 w-5 text-white" />
-                    </div>
-                  )}
-                  <div className="text-center">
-                    <X className="h-8 w-8 mx-auto mb-1" />
-                    <div className="text-sm">ไม่ประสงค์ลงคะแนน</div>
-                  </div>
-                </motion.button>
-              </div>
+                </div>
+              )}
             </motion.div>
           )}
         </div>

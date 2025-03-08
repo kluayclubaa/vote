@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { User, Clock, Award, Check, X, UserCircle2 } from "lucide-react";
+import { User, Clock, Award, Check, X, UserCircle2, Home } from "lucide-react";
 
-const candidates = ["A", "B", "C", "D"]; // รายชื่อผู้สมัคร
+const candidates = ["พรรคจะรบ", "พรรคผ่อน", "พรรคผ่อน2", "พรรคผ่อนเหมือนกัน"]; // รายชื่อผู้สมัคร
 
 // Define the type for votes
 interface Votes {
@@ -62,6 +62,9 @@ export default function VoteStudent() {
       });
     }
   };
+  const handleGoHome = () => {
+    router.push("/");
+  };
 
   const getWinner = () => {
     const maxVotes = Math.max(...Object.values(votes), 0);
@@ -77,7 +80,7 @@ export default function VoteStudent() {
   };
 
   // Calculate progress percentage for timer
-  const timerProgress = (timeRemaining / 120) * 100;
+  const timerProgress = (timeRemaining / 60) * 100;
 
   // Get candidate background color based on selection
   const getCandidateBackground = (candidate: string) => {
@@ -117,7 +120,7 @@ export default function VoteStudent() {
           <div className="flex flex-col items-center">
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5 text-blue-600" />
-              <span className="font-bold text-lg">
+              <span className="font-bold text-lg text-red-500">
                 {formatTime(timeRemaining)}
               </span>
             </div>
@@ -173,8 +176,12 @@ export default function VoteStudent() {
                   <div className="bg-blue-100 rounded-full p-4 mb-3">
                     <UserCircle2 className="h-12 w-12 text-blue-600" />
                   </div>
-                  <div className="font-bold text-xl mb-1">{candidate}</div>
-                  <div className="text-sm">ผู้สมัครประธานนักเรียน</div>
+                  <div className="font-bold text-xl mb-1 text-black">
+                    {candidate}
+                  </div>
+                  <div className="text-sm text-black">
+                    ผู้สมัครประธานนักเรียน
+                  </div>
                 </div>
               </motion.button>
             ))}
@@ -197,12 +204,21 @@ export default function VoteStudent() {
                   <Check className="h-5 w-5 text-white" />
                 </div>
               )}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ">
                 <X className="h-5 w-5" />
-                <span>ไม่ประสงค์ลงคะแนน</span>
+                <span className="text-black">ไม่ประสงค์ลงคะแนน</span>
               </div>
             </motion.button>
           </div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleGoHome}
+            className="mt-6 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg shadow-md mx-auto transition-colors"
+          >
+            <Home className="h-5 w-5" />
+            <span>กลับไปหน้าแรก</span>
+          </motion.button>
         </div>
 
         {/* Results section */}
