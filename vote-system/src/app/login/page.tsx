@@ -63,7 +63,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-black"
               >
                 ชื่อ-นามสกุล
               </label>
@@ -73,7 +73,7 @@ export default function LoginPage() {
                 placeholder="กรอกชื่อ-นามสกุล"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg border ${
+                className={`w-full px-4 py-2 rounded-lg border text-black ${
                   errors.name ? "border-red-500" : "border-gray-300"
                 } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
               />
@@ -85,7 +85,7 @@ export default function LoginPage() {
             <div className="space-y-2">
               <label
                 htmlFor="studentId"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-black"
               >
                 รหัสนักเรียน
               </label>
@@ -95,7 +95,7 @@ export default function LoginPage() {
                 placeholder="กรอกรหัสนักเรียน"
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
-                className={`w-full px-4 py-2 rounded-lg border ${
+                className={`w-full px-4 py-2 rounded-lg border text-black ${
                   errors.studentId ? "border-red-500" : "border-gray-300"
                 } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
               />
