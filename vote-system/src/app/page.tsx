@@ -36,14 +36,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 p-4">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">จ่ายมาก่อน 500</h1>
-      {/* <motion.div
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="max-w-6xl mx-auto"
-      > */}
-      {/* <div className="flex justify-between items-center bg-white rounded-xl shadow-md p-4 mb-8">
+      >
+        <div className="flex justify-between items-center bg-white rounded-xl shadow-md p-4 mb-8">
           <div className="flex items-center gap-3">
             <div className="bg-blue-100 p-2 rounded-full">
               <User className="h-6 w-6 text-blue-600" />
@@ -60,10 +59,10 @@ export default function Home() {
             <LogOut className="h-4 w-4" />
             <span className="text-sm">ออกจากระบบ</span>
           </button>
-        </div> */}
+        </div>
 
-      {/* Main content */}
-      {/* <motion.div
+        {/* Main content */}
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -75,9 +74,9 @@ export default function Home() {
             <p className="text-gray-600">เลือกประเภทการโหวตที่คุณต้องการ</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto"> */}
-      {/* Student President Voting Card */}
-      {/* <motion.div
+          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            {/* Student President Voting Card */}
+            <motion.div
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="bg-white rounded-xl shadow-md overflow-hidden"
             >
@@ -99,10 +98,10 @@ export default function Home() {
                   เริ่มการโหวต
                 </Link>
               </div>
-            </motion.div> */}
+            </motion.div>
 
-      {/* Color Team President Voting Card */}
-      {/* <motion.div
+            {/* Color Team President Voting Card */}
+            <motion.div
               whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="bg-white rounded-xl shadow-md overflow-hidden"
             >
@@ -127,7 +126,7 @@ export default function Home() {
             </motion.div>
           </div>
         </motion.div>
-      </motion.div> */}
+      </motion.div>
     </div>
   );
 }
